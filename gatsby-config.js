@@ -4,7 +4,7 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: "jean marion",
+    title: "Jean Marion",
     titleAlt: "JMarion",
     shortName: "JMarion",
     author: "ComteJu",
@@ -21,7 +21,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: "jean marion",
+        name: "Jean Marion",
         short_name: "JMarion",
         start_url: "/",
         background_color: "#FFF",
