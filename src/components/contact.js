@@ -55,7 +55,10 @@ export default props => (
   <StaticQuery
     query={graphql`
       query {
-        allTrelloCard(filter: { list_name: { eq: "Contact" } }) {
+        allTrelloCard(
+          filter: { list_name: { eq: "Contact" } }
+          sort: { fields: [index], order: ASC }
+        ) {
           edges {
             node {
               id
