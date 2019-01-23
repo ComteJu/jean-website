@@ -41,14 +41,6 @@ module.exports = {
       options: {
         trackingId: `${process.env.GA_ID}`,
       },
-    }/* ,
-    {
-      resolve: "gatsby-source-trello-board",
-      options: {
-        key: `${process.env.KEY}`,
-        token: `${process.env.TOKEN}`,
-        board_id: `${process.env.BOARD_ID}`
-      }
-    }, */
+    }
   ]
 };
