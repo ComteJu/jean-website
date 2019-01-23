@@ -35,7 +35,13 @@ module.exports = {
     "gatsby-plugin-offline",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
-    `gatsby-plugin-styled-components`/* ,
+    `gatsby-plugin-styled-components`,
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        trackingId: `${process.env.GA_ID}`,
+      },
+    }/* ,
     {
       resolve: "gatsby-source-trello-board",
       options: {
