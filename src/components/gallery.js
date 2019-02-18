@@ -5,19 +5,24 @@ import styled from "styled-components";
 import posed from "react-pose";
 import { theme } from "config/theme";
 
+/**
+ * STYLE
+ */
 
-const Main = styled(posed.div({
-  enter: {
-    y: 0,
-    opacity: 1,
-    transition: { ease: "easeOut" }
-  },
-  exit: {
-    y: "2%",
-    opacity: 0,
-    transition: { ease: "easeOut" }
-  }
-}))`
+const Main = styled(
+  posed.div({
+    enter: {
+      y: 0,
+      opacity: 1,
+      transition: { ease: "easeOut" }
+    },
+    exit: {
+      y: "2%",
+      opacity: 0,
+      transition: { ease: "easeOut" }
+    }
+  })
+)`
   padding-top: calc(${theme.space} * 2);
   margin: auto;
   @media screen and (min-width: 60em) {
@@ -44,60 +49,66 @@ const Image = styled(Img)`
 }
 `;
 
-class Gallery extends React.Component {
-  render() {
-    const { edges: toiles } = this.props.data.allTrelloCard;
+/**
+ * COMPONENT
+ */
 
-    return (
+const Gallery = () => (
+  <StaticQuery
+    query={galleryQuery}
+    render={data => {
+      return (
         <Main>
-          {toiles.map(({ node: toile }) => (
+          {data.toiles.edges.map(({ node: toile }) => (
             <Toile key={toile.id}>
-              {toile.image && (
-                <Image
-                  fluid={toile.image.childImageSharp.fluid}
-                  alt={toile.name}
-                />
-              )}
+              <Image
+                fluid={
+                  toile.primary.toile_image.localFile.childImageSharp.fluid
+                }
+                alt={toile.primary.desc.text}
+              />
               <figcaption
                 dangerouslySetInnerHTML={{
-                  __html: toile.childMarkdownRemark.html
+                  __html: toile.primary.desc.html
                 }}
               />
             </Toile>
           ))}
         </Main>
-    );
-  }
-}
+      );
+    }}
+  />
+);
 
-export default props => (
-  <StaticQuery
-    query={graphql`
-      query {
-        allTrelloCard(
-          filter: { list_name: { eq: "Toiles" } }
-          sort: { fields: [index], order: ASC }
-        ) {
-          edges {
-            node {
-              id
-              name
-              index
-              childMarkdownRemark {
-                html
-              }
-              image {
+/**
+ * QUERY
+ */
+
+const galleryQuery = graphql`
+  query {
+    toiles: allPrismicGallerieBodyToile {
+      edges {
+        node {
+          id
+          primary {
+            toile_image {
+              localFile {
                 childImageSharp {
                   fluid(quality: 100) {
-                    ...GatsbyImageSharpFluid_withWebp
+                    ...GatsbyImageSharpFluid_withWebp_noBase64
                   }
                 }
               }
             }
+            desc: toile_description {
+              html
+              text
+            }
           }
         }
       }
-    `}
-    render={data => <Gallery data={data} {...props} />}
-  />
-);
+    }
+  }
+`;
+
+export default Gallery;

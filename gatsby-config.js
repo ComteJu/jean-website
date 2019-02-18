@@ -30,11 +30,18 @@ module.exports = {
         icon: "src/images/jm_icon.png",
         banner: "src/images/jm_icon.png"
       }
-    }, 
+    },
     "gatsby-transformer-remark",
-    "gatsby-plugin-offline",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
-    `gatsby-plugin-styled-components`
+    `gatsby-plugin-styled-components`,
+    {
+      resolve: "gatsby-source-prismic",
+      options: {
+        repositoryName: `${process.env.NAME}`,
+        accessToken: `${process.env.TOKEN}`
+      }
+    },
+    "gatsby-plugin-offline"
   ]
 };

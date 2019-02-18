@@ -4,6 +4,10 @@ import styled from "styled-components";
 import posed from "react-pose";
 import { theme } from "config/theme";
 
+/**
+ *  STYLE
+ */
+
 const Main = styled(
   posed.div({
     enter: {
@@ -18,7 +22,6 @@ const Main = styled(
     }
   })
 )`
-
   padding: ${theme.space};
   @media screen and (min-width: 60em) {
     padding-top: calc(${theme.space} + 9em);
@@ -35,7 +38,7 @@ const Section = styled.section`
     text-indent: 1em;
     letter-spacing: 0.015em;
   }
-  h3 {
+  h4 {
     padding-top: 1em;
   }
   ul {
@@ -44,43 +47,52 @@ const Section = styled.section`
   }
 `;
 
-class About extends React.Component {
-  render() {
-    const { edges: sections } = this.props.data.allTrelloCard;
-    return (
-      <Main>
-        {sections.map(({ node: section }) => (
-          <Section
-            key={section.id}
-            dangerouslySetInnerHTML={{
-              __html: section.childMarkdownRemark.html
-            }}
-          />
-        ))}
-      </Main>
-    );
-  }
-}
+/**
+ *  COMPONENT
+ */
 
-export default props => (
+const About = () => (
   <StaticQuery
-    query={graphql`
-      query {
-        allTrelloCard(
-          filter: { list_name: { eq: "Infos" } }
-          sort: { fields: [index], order: ASC }
-        ) {
-          edges {
-            node {
-              id
-              childMarkdownRemark {
-                html
-              }
+    query={aboutQuery}
+    render={data => {
+      return (
+        <Main>
+          {data.bio.edges.map(({ node: section }) => (
+            <Section
+              key={section.id}
+              dangerouslySetInnerHTML={{
+                __html: section.primary.contenu.html
+              }}
+            />
+          ))}
+        </Main>
+      );
+    }}
+  />
+);
+
+/**
+ *  QUERY
+ */
+
+const aboutQuery = graphql`
+  query {
+    bio: allPrismicBiographieBodySection {
+      edges {
+        node {
+          id
+          primary {
+            section_nom {
+              html
+            }
+            contenu: section_contenu {
+              html
             }
           }
         }
       }
-    `}
-    render={data => <About data={data} {...props} />}
-  />
-);
+    }
+  }
+`;
+
+export default About;

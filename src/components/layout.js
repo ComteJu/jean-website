@@ -1,15 +1,18 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { StaticQuery, graphql } from "gatsby";
 import Header from "../components/header/header";
 import Contact from "../components/contact";
 import Social from "./social";
-import Signature from "./signature"
+import Signature from "./signature";
 import SEO from "./SEO";
 import { createGlobalStyle } from "styled-components";
+import "typeface-playfair-display";
+
+/**
+ * STYLE
+ */
 
 const GlobalStyle = createGlobalStyle`
-@import url(${props => props.importFont});
 
 html {
   box-sizing: border-box;
@@ -30,7 +33,7 @@ body, h1, h2, h3, h4, h5, h6, p, ol, ul, li {
 
 
 h1 {
-  font-family: ${props => props.font}, serif;
+  font-family: 'Playfair Display', serif;
 }
 
 p {
@@ -46,48 +49,44 @@ img {
   height: auto;
 }
 `;
-class Layout extends React.Component {
-  render() {
-    const { children, data } = this.props;
 
-    const fontOne =
-      data.trelloCard.childMarkdownRemark.frontmatter.typo;
-    const importFont =
-      "https://fonts.googleapis.com/css?family=" + fontOne.replace(/ /g, "+");
+/**
+ * COMPONENT
+ */
 
-    return (
-      <>
-        <GlobalStyle font={fontOne} importFont={importFont} />
-        <SEO />
-        <Header siteTitle={data.site.siteMetadata.title} />
-        <Contact />
-        <Social />
-        {children}
-        <Signature />
-      </>
-    );
-  }
-}
+const Layout = ({ children }) => {
+  return (
+    <StaticQuery
+      query={layoutQuery}
+      render={data => {
+        return (
+          <>
+            <GlobalStyle />
+            <SEO />
+            <Header siteTitle={data.site.siteMetadata.title} />
+            <Contact />
+            <Social />
+            {children}
+            <Signature />
+          </>
+        );
+      }}
+    />
+  );
+};
 
-export default props => (
-  <StaticQuery
-    query={graphql`
-      query SiteTitleQuery {
-        site {
-          siteMetadata {
-            title
-          }
-        }
-        trelloCard(name: { eq: "Styles" }) {
-          id
-          childMarkdownRemark {
-            frontmatter {
-              typo
-            }
-          }
-        }
+/**
+ * QUERY
+ */
+
+const layoutQuery = graphql`
+  query {
+    site {
+      siteMetadata {
+        title
       }
-    `}
-    render={data => <Layout data={data} {...props} />}
-  />
-);
+    }
+  }
+`;
+
+export default Layout;

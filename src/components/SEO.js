@@ -19,16 +19,13 @@ export default class SEO extends Component {
               defaultDescription,
               defaultBanner
             }
-          },
-          image: {
-            image_url
           }
         }) => {
           const seo = {
             title: title || defaultTitle,
             description: defaultDescription || desc,
             image: `${siteUrl}${banner || defaultBanner}`,
-            url: `${siteUrl}${pathname || "/"}`,
+            url: `${siteUrl}${pathname || "/"}`
           };
 
           let schemaOrgJSONLD = [
@@ -36,10 +33,9 @@ export default class SEO extends Component {
               "@context": "http://schema.org",
               "@type": "WebSite",
               "@id": siteUrl,
-              "url": siteUrl,
-              "name": defaultTitle,
-              "alternateName": titleAlt || "",
-              "image": image_url
+              url: siteUrl,
+              name: defaultTitle,
+              alternateName: titleAlt || ""
             }
           ];
 
@@ -91,9 +87,6 @@ const query = graphql`
         defaultDescription: description
         defaultBanner: banner
       }
-    }
-    image: trelloCard(name: { eq: "La maison des peintres" }) {
-      image_url
     }
   }
 `;

@@ -4,6 +4,10 @@ import styled from "styled-components";
 import posed from "react-pose";
 import { theme } from "config/theme";
 
+/**
+ * STYLE
+ */
+
 const Article = styled(
   posed.article({
     enter: {
@@ -38,36 +42,43 @@ const Article = styled(
   }
 `;
 
-class Contact extends React.Component {
-  render() {
-    const { edges: contacts } = this.props.data.allTrelloCard;
-    return (
-      <Article>
-        {contacts.map(({ node: contact }) => (
-          <h3 key={contact.id}>{contact.name}</h3>
-        ))}
-      </Article>
-    );
-  }
-}
+/**
+ * COMPONENT
+ */
 
-export default props => (
+const Contact = () => (
   <StaticQuery
-    query={graphql`
-      query {
-        allTrelloCard(
-          filter: { list_name: { eq: "Contact" } }
-          sort: { fields: [index], order: ASC }
-        ) {
-          edges {
-            node {
-              id
-              name
+    query={contactQuery}
+    render={data => {
+      return (
+        <Article>
+          {data.contacts.edges.map(({ node: contact }) => (
+            <h3 key={contact.id}>{contact.primary.adresse.text}</h3>
+          ))}
+        </Article>
+      );
+    }}
+  />
+);
+
+/**
+ * QUERY
+ */
+const contactQuery = graphql`
+  query {
+    contacts: allPrismicContactBodyContact {
+      edges {
+        node {
+          id
+          primary {
+            adresse {
+              text
             }
           }
         }
       }
-    `}
-    render={data => <Contact data={data} {...props} />}
-  />
-);
+    }
+  }
+`;
+
+export default Contact;

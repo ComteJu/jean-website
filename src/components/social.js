@@ -1,9 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import posed from "react-pose";
 import { theme } from "config/theme";
 import { graphql, StaticQuery } from "gatsby";
 import Img from "gatsby-image";
+
+/**
+ * STYLE
+ */
 
 const Article = styled.article`
   padding: ${theme.space} ${theme.space} 0 ${theme.space};
@@ -33,61 +36,54 @@ const Li = styled.li`
   width: fit-content;
 `;
 
-const Footer = styled.footer`
-  padding: 0.5em 0 0 0;
-  opacity: 0.5;
-  &:hover {
-    opacity: 1;
-  }
-`;
+/**
+ * COMPONENT
+ */
 
-class Social extends React.Component {
-  render() {
-    const { edges: icons } = this.props.data.allTrelloCard;
-    return (
-      <Article>
-        <Ul>
-          {icons.map(({ node: icon }) => (
-            <Li key={icon.id}>
-              <a
-                href={icon.childMarkdownRemark.frontmatter.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {icon.image && (
+const Social = () => (
+  <StaticQuery
+    query={socialQuery}
+    render={data => {
+      return (
+        <Article>
+          <Ul>
+            {data.socials.edges.map(({ node: social }) => (
+              <Li key={social.id}>
+                <a
+                  href={social.primary.lien.text}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Img
                     style={{ width: "1.2em" }}
-                    fluid={icon.image.childImageSharp.fluid}
+                    fluid={social.primary.image.localFile.childImageSharp.fluid}
                   />
-                )}
-              </a>
-            </Li>
-          ))}
-        </Ul>
-      </Article>
-    );
-  }
-}
+                </a>
+              </Li>
+            ))}
+          </Ul>
+        </Article>
+      );
+    }}
+  />
+);
 
-export default props => (
-  <StaticQuery
-    query={graphql`
-      query {
-        allTrelloCard(
-          filter: { list_name: { eq: "Liens" } }
-          sort: { fields: [index], order: ASC }
-        ) {
-          edges {
-            node {
-              id
-              name
-              childMarkdownRemark {
-                frontmatter {
-                  url
-                }
-              }
-              image {
-                id
+/**
+ * QUERY
+ */
+
+const socialQuery = graphql`
+  query {
+    socials: allPrismicSociaBodyLienSocial {
+      edges {
+        node {
+          id
+          primary {
+            lien {
+              text
+            }
+            image: icon {
+              localFile {
                 childImageSharp {
                   fluid(quality: 100) {
                     ...GatsbyImageSharpFluid_withWebp
@@ -98,7 +94,8 @@ export default props => (
           }
         }
       }
-    `}
-    render={data => <Social data={data} {...props} />}
-  />
-);
+    }
+  }
+`;
+
+export default Social;

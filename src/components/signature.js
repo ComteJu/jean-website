@@ -4,6 +4,10 @@ import posed from "react-pose";
 import { theme } from "config/theme";
 import { graphql, StaticQuery } from "gatsby";
 
+/**
+ * STYLE
+ */
+
 const Footer = styled.footer`
   padding: ${theme.space};
   @media screen and (min-width: 60em) {
@@ -32,40 +36,45 @@ const Li = styled.li`
   }
 `;
 
-class Signature extends React.Component {
-  render() {
-    const { edges: elements } = this.props.data.allTrelloCard;
-    return (
-      <Footer>
-        <Ul>
-          {elements.map(({ node: e }) => (
-            <Li key={e.id}>
-              <p>{e.name}</p>
-            </Li>
-          ))}
-        </Ul>
-      </Footer>
-    );
-  }
-}
+/**
+ * COMPONENT
+ */
 
-export default props => (
+const Signature = () => (
   <StaticQuery
-    query={graphql`
-      query {
-        allTrelloCard(
-          filter: { list_name: { eq: "Pied de page" } }
-          sort: { fields: [index], order: DESC }
-        ) {
-          edges {
-            node {
-              id
-              name
-            }
-          }
-        }
-      }
-    `}
-    render={data => <Signature data={data} {...props} />}
+    query={signQuery}
+    render={data => {
+      return (
+        <Footer>
+          <Ul>
+            <Li>
+              <p>{data.sign.data.signature.text}</p>
+            </Li>
+            <Li>
+              <p>@2019</p>
+            </Li>
+          </Ul>
+        </Footer>
+      );
+    }}
   />
 );
+
+/**
+ * QUERY
+ */
+
+const signQuery = graphql`
+  query {
+    sign: prismicConfiguration {
+      id
+      data {
+        signature {
+          text
+        }
+      }
+    }
+  }
+`;
+
+export default Signature;
