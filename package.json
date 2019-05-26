@@ -2,7 +2,7 @@
   "name": "jean-marion-website",
   "description": "Jean Marion Website",
   "version": "0.1.0",
-  "author": "Julien Lecomte",
+  "author": "bariolage",
   "license": "MIT",
   "dependencies": {
     "@reach/router": "^1.2.1",
