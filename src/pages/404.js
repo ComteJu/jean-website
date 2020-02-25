@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Layout from "../components/layout";
 
 const Zone = styled.article`
   display: flex;
@@ -12,11 +11,9 @@ const Zone = styled.article`
 
 export default () => {
   return (
-    <Layout>
-      <Zone>
-        <h1>Oups</h1>
-        <p>Cette page n'existe pas...</p>
-      </Zone>
-    </Layout>
+    <Zone>
+      <h1>Oups</h1>
+      <p>Cette page n'existe pas...</p>
+    </Zone>
   );
 };
